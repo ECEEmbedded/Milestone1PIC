@@ -16,6 +16,7 @@
 #include "uart_thread.h"
 #include "timer1_thread.h"
 #include "timer0_thread.h"
+#include "adcHelper.h"
 
 #ifdef __USE18F45J10
 // CONFIG1L
@@ -107,6 +108,9 @@ void main(void) {
     // init the timer1 lthread
     init_timer1_lthread(&t1thread_data);
 
+    // init the adc
+    adcInit();
+
     // initialize message queues before enabling any interrupts
     init_queues();
 
@@ -124,7 +128,7 @@ void main(void) {
      */
 
     // initialize Timers
-    //OpenTimer0(TIMER_INT_ON & T0_16BIT & T0_SOURCE_INT & T0_PS_1_128);
+    OpenTimer0(TIMER_INT_ON & T0_16BIT & T0_SOURCE_INT & T0_PS_1_128);
     OpenTimer1(TIMER_INT_ON & T1_PS_1_8 & T1_16BIT_RW & T1_SOURCE_INT & T1_OSC1EN_OFF & T1_SYNC_EXT_OFF);
 
     // Peripheral interrupts can have their priority set to high or low
@@ -158,9 +162,6 @@ void main(void) {
     LATBbits.LATB2 = 1;
     for (;;);
 #endif
-
-    // must specifically enable the I2C interrupts
-    PIE1bits.SSPIE = 1;
 
     // configure the hardware USART device
     OpenUSART(USART_TX_INT_OFF & USART_RX_INT_ON & USART_ASYNCH_MODE & USART_EIGHT_BIT &

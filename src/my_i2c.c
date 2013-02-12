@@ -11,6 +11,7 @@ static i2c_comm *ic_ptr;
 // Configure for I2C Master mode -- the variable "slave_addr" should be stored in
 //   i2c_comm (as pointed to by ic_ptr) for later use.
 
+// RC: PIC is never master except maybe one on rover to control wireless
 void i2c_configure_master(unsigned char slave_addr) {
     // Your code goes here
 }
@@ -27,6 +28,7 @@ void i2c_configure_master(unsigned char slave_addr) {
 // The subroutine must copy the msg to be sent from the "msg" parameter below into
 //   the structure to which ic_ptr points [there is already a suitable buffer there].
 
+// RC: PIC is never master except maybe one on rover to control wireless
 unsigned char i2c_master_send(unsigned char length, unsigned char *msg) {
     // Your code goes here
     return(0);
@@ -45,6 +47,7 @@ unsigned char i2c_master_send(unsigned char length, unsigned char *msg) {
 //   is determined by the parameter passed to i2c_master_recv()].
 // The interrupt handler will be responsible for copying the message received into
 
+// RC: PIC is never master except maybe one on rover to control wireless
 unsigned char i2c_master_recv(unsigned char length) {
     // Your code goes here
     return(0);
@@ -280,6 +283,9 @@ void init_i2c(i2c_comm *ic) {
 // the address must include the R/W bit
 
 void i2c_configure_slave(unsigned char addr) {
+
+    // must specifically enable the I2C interrupts
+    PIE1bits.SSPIE = 1;
 
     // ensure the two lines are set for input (we are a slave)
     TRISCbits.TRISC3 = 1;
